@@ -1,4 +1,4 @@
-FROM n8nio/n8n:latest
+FROM n8nio/n8n:1.39.1-debian
 
 # Use node user to install the community node
 USER node
