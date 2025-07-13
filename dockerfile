@@ -25,20 +25,15 @@ USER root
 # Copy TDLib binary from builder stage
 COPY --from=tdlib-builder /td/tdlib/lib/libtdjson.so /usr/local/lib/libtdjson.so
 
-# Add runtime entrypoint script correctly
-RUN cat << 'EOF' > /entrypoint.sh
-#!/bin/sh
-TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds
-TARGET_ROOT=/root/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds
-
-mkdir -p "$TARGET_NODE"
-mkdir -p "$TARGET_ROOT"
-
-cp /usr/local/lib/libtdjson.so "$TARGET_NODE/libtdjson.so"
-cp /usr/local/lib/libtdjson.so "$TARGET_ROOT/libtdjson.so"
-
-exec /docker-entrypoint.sh
-EOF
+# Add runtime entrypoint script inline
+RUN printf '%s\n' '#!/bin/sh' \
+'TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds' \
+'TARGET_ROOT=/root/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds' \
+'mkdir -p "$TARGET_NODE"' \
+'mkdir -p "$TARGET_ROOT"' \
+'cp /usr/local/lib/libtdjson.so "$TARGET_NODE/libtdjson.so"' \
+'cp /usr/local/lib/libtdjson.so "$TARGET_ROOT/libtdjson.so"' \
+'exec /docker-entrypoint.sh' > /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
 
