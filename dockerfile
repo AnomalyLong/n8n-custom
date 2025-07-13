@@ -25,7 +25,7 @@ USER root
 # Copy TDLib binary from builder stage
 COPY --from=tdlib-builder /td/tdlib/lib/libtdjson.so /usr/local/lib/libtdjson.so
 
-# Write entrypoint.sh properly using a heredoc
+# Add runtime entrypoint script correctly
 RUN cat << 'EOF' > /entrypoint.sh
 #!/bin/sh
 TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds
