@@ -25,6 +25,7 @@ USER root
 # Copy built .so file from the previous stage
 COPY --from=tdlib-builder /td/tdlib/lib/libtdjson.so /usr/local/lib/libtdjson.so
 
+
 # Add runtime entrypoint script inline
 RUN echo '#!/bin/sh\n\
 TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds\n\
