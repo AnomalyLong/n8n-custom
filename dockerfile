@@ -10,8 +10,6 @@ RUN mkdir build && cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=../tdlib .. && \
     cmake --build . --target install
 
----
-
 ### Stage 2: Build custom n8n with TDLib support
 FROM n8nio/n8n:latest
 
