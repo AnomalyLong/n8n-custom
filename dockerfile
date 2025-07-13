@@ -19,21 +19,27 @@ RUN mkdir -p /home/node/.n8n/nodes && \
     cd /home/node/.n8n/nodes && \
     npm install @telepilotco/n8n-nodes-telepilot
 
-# Switch to root to handle system-wide setup
+# Switch to root for system setup
 USER root
 
-# Copy built .so file from the previous stage
+# Copy TDLib binary from builder stage
 COPY --from=tdlib-builder /td/tdlib/lib/libtdjson.so /usr/local/lib/libtdjson.so
 
+# Write entrypoint.sh properly using a heredoc
+RUN cat << 'EOF' > /entrypoint.sh
+#!/bin/sh
+TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds
+TARGET_ROOT=/root/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds
 
-# Add runtime entrypoint script inline
-RUN echo '#!/bin/sh\n\
-TARGET_NODE=/home/node/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds\n\
-TARGET_ROOT=/root/.n8n/nodes/node_modules/@telepilotco/tdlib-binaries-prebuilt/prebuilds\n\
-mkdir -p "$TARGET_NODE"\n\
-mkdir -p "$TARGET_ROOT"\n\
-cp /usr/local/lib/libtdjson.so "$TARGET_NODE/libtdjson.so"\n\
-cp /usr/local/lib/libtdjson.so "$TARGET_ROOT/libtdjson.so"\n\
-exec /docker-entrypoint.sh' > /entrypoint.sh && chmod +x /entrypoint.sh
+mkdir -p "$TARGET_NODE"
+mkdir -p "$TARGET_ROOT"
+
+cp /usr/local/lib/libtdjson.so "$TARGET_NODE/libtdjson.so"
+cp /usr/local/lib/libtdjson.so "$TARGET_ROOT/libtdjson.so"
+
+exec /docker-entrypoint.sh
+EOF
+
+RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
