@@ -9,7 +9,7 @@ USER root
 
 COPY libtdjson.so /usr/local/lib/libtdjson.so
 
-# Add entrypoint.sh using a clean heredoc (no interpolation, no parsing)
+# Write a working /entrypoint.sh using quoted heredoc (no Docker parsing!)
 RUN cat << 'EOF' > /entrypoint.sh
 #!/bin/sh
 
