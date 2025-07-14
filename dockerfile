@@ -9,7 +9,7 @@ USER root
 
 COPY libtdjson.so /usr/local/lib/libtdjson.so
 
-# Inject corrected entrypoint
+# Add entrypoint.sh using a clean heredoc (no interpolation, no parsing)
 RUN cat << 'EOF' > /entrypoint.sh
 #!/bin/sh
 
