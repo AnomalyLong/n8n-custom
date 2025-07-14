@@ -11,7 +11,7 @@ RUN mkdir build && cd build && \
     cmake --build . --target install
 
 ### Stage 2: Build custom n8n with TDLib support
-FROM n8nio/n8n:latest
+FROM n8nio/n8n:1.17.0
 
 # Install TelePilot community node
 USER node
